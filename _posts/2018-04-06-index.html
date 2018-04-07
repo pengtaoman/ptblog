@@ -26,10 +26,65 @@ XSS 通过注入到自己站点的恶意代码，操作cookie或者web storage�
 <br><br>
 To prevent XSS, the common response is to escape and encode all untrusted data.
 <br>
-encode 数据，将< > 这些转义成 &g之类的代码
+防止XSS攻击的办法 ： encode 数据，将< > 这些转义成 &g之类的代码
+
+    <br><br>
 
 What if only one of the scripts you use is compromised?
 Malicious JavaScript can be embedded on the page, and Web Storage is compromised. These types of XSS attacks can get everyone’s Web Storage that visits your site, without their knowledge. This is probably why a bunch of organizations advise not to store anything of
 value or trust any information in web storage. This includes session identifiers and tokens.
 
+    <br>
+    但是现在的应用引入很多其他代码，无法保证每个引用的第三方资源都是安全的，只要实现XSS攻击，可以读取所有访问自己网站的客户端的web storage，因此不建议将敏感信息放到web storage中
+
+
+    As a storage mechanism, Web Storage does not enforce any secure standards during transfer.
+    Whoever reads Web Storage and uses it must do their due diligence to ensure they always send the JWT over HTTPSand never HTTP.
+    <br>作为一种存储机制，Web Storage不保证在传输过程中的任何安全，因此重要的是保证通过https发送jwt。
+
+
+    <br><br>
+    JWT Cookie Storage Security
+
+    Cookies, when used with the HttpOnly cookie flag, are not accessible through JavaScript, and are immune to XSS.
+    You can also set the Secure cookie flag to guarantee the cookie is only sent over HTTPS.
+    This is one of the main reasons that cookies have been leveraged in the past to store tokens or session data.
+    <br>
+    是哟哦那个cookie存储的话，给cookie加HttpOnly能保证cookie不被js读取，因此杜绝XSS攻击，
+    Secure cookie则保证cookie通过https传输（chrome不认为这是安全的），这是cookie被作为传输session和token的主要原因
+    <br> <br>
+    Modern developers are hesitant to use cookies because they traditionally required state to be stored on the server,
+    thus breaking RESTful best practices.
+    Cookies as a storage mechanism do not require state to be stored on the server if you are storing a JWT in the cookie. This is because the JWT encapsulates everything the server needs to serve the request.
+    <br>
+    现代的开发者对于使用cookies比较犹豫，因为cookies总是请求存储在服务端的状态,这有悖于restful的最佳实践。
+    如果使用cookies作为一种存储机制存储jwt，那么他就不会请求服务器的状态，因为jwt封装了一切服务端需要用于服务request的东西。
+
+    However, cookies are vulnerable to a different type of attack: cross-site request forgery (CSRF). A CSRF attack is a type of attack that occurs when a malicious web site, email, or blog causes a user’s web browser to perform an unwanted action on a trusted site on which the user is currently authenticated. This is an exploit of how the browser handles cookies. A cookie can only be sent to the domains in which it is allowed. By default, this is the domain that originally set the cookie. The cookie will be sent for a request regardless of whether you are on galaxies.com or hahagonnahackyou.com.
+
+    然而cookies对于CSRF 跨域请求伪造攻击很薄弱，默认的cookie只能发送给允许的domain，因为是zhegedomain创建并设置了这个cookie， 而这个cookie会被一个请求发送，无论你在那个域名下（比如多个tab共享cookie，其他域名的tab使用了另一个tab的cookie）
+    <br> <br>
+
+
+    However, cookies are vulnerable to a different type of attack: cross-site request forgery (CSRF).
+    A CSRF attack is a type of attack that occurs when a malicious web site, email,
+    or blog causes a user’s web browser to perform an unwanted action on a trusted site on which the user is
+    currently authenticated. This is an exploit of how the browser handles cookies. A cookie can only be sent to
+    the domains in which it is allowed. By default, this is the domain that originally set the cookie.
+    The cookie will be sent for a request regardless of whether you are on galaxies.com or hahagonnahackyou.com.
+    <br>
+    然而cookies对于CSRF 跨域请求伪造攻击很薄弱，默认的cookie只能发送给允许的domain，
+    因为是zhegedomain创建并设置了这个cookie， 而这个cookie会被一个请求发送，
+    无论你在那个域名下（比如多个tab共享cookie，其他域名的tab使用了另一个tab的cookie）
+    <br>
+    无论页面刷新还是ajax请求，只要域名一致，并且标志cookie的path一致，每次请求都会自动带上cookie，因此jwt放在cookie里，也不能防止csrf攻击，只能加xsrfToken
+
+    也就是说，即使做前后端分离，也仍然可以像不是前后端分离的应用一样，使用session后进行登录状态维持，这是没有问题的
+    <br>    <br>
+    Conclusion
+    <br>
+    JWTs are an awesome authentication mechanism. They give you a structured way to declare users and what they can access. They can be encrypted and signed for to prevent tampering on the client side, but the devil is in the details and where you store them. Stormpath recommends that you store your JWT in cookies for web applications, because of the additional security they provide, and the simplicity of protecting against CSRF with modern web frameworks. HTML5 Web Storage is vulnerable to XSS, has a larger attack surface area, and can impact all application users on a successful attack.
+
+    <br>
+    结论（自己的）：在可以防止XSS攻击的情况下，jwt放在webstorage里会省去xsrfToken的麻烦，这个东西前后端都要处理，比较麻烦
 </div>
