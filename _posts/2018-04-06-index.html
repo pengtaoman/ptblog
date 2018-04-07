@@ -10,7 +10,7 @@ title: JWT安全设计考虑
 
 
 
-
+<br>
 Web Storage (localStorage/sessionStorage) is accessible through JavaScript on the same domain.
 This means that any JavaScript running on your site will have access to web storage,
 and because of this can be vulnerable to cross-site scripting (XSS) attacks. XSS, in a nutshell,
@@ -20,7 +20,7 @@ Basic XSS attacks attempt to inject JavaScript through form inputs, where the at
 into a form to see if it is run by the browser and can be viewed by other users.
 
 
-
+<br>
 Web Storage (localStorage/sessionStorage)只能通过同一domain的js代码访问，
 XSS 通过注入到自己站点的恶意代码，操作cookie或者web storage来实现，
 
