@@ -4,6 +4,23 @@ title: JWT安全设计考虑
 ---
 <h2>{{ page.title }}</h2>
 
+原文<a href="https://stormpath.com/blog/where-to-store-your-jwts-cookies-vs-html5-web-storage">Where to Store your JWTs – Cookies vs HTML5 Web Storage
+    </a>
 
 
+
+
+
+Web Storage (localStorage/sessionStorage) is accessible through JavaScript on the same domain.
+This means that any JavaScript running on your site will have access to web storage,
+and because of this can be vulnerable to cross-site scripting (XSS) attacks. XSS, in a nutshell,
+is a type of vulnerability where an attacker can inject JavaScript that will run on your page.
+Basic XSS attacks attempt to inject JavaScript through form inputs, where the attacker puts
+<pre><script>alert('You are Hacked');</script> </pre>
+into a form to see if it is run by the browser and can be viewed by other users.
+
+
+
+Web Storage (localStorage/sessionStorage)只能通过同一domain的js代码访问，
+XSS 通过注入到自己站点的恶意代码，操作cookie或者web storage来实现，
 
