@@ -16,7 +16,9 @@ This means that any JavaScript running on your site will have access to web stor
 and because of this can be vulnerable to cross-site scripting (XSS) attacks. XSS, in a nutshell,
 is a type of vulnerability where an attacker can inject JavaScript that will run on your page.
 Basic XSS attacks attempt to inject JavaScript through form inputs, where the attacker puts
+    <div class="alert alert-primary" role="alert">
 <pre>&lt;script>&gt;alert('You are Hacked');&lt;/script&gt; </pre>
+        </div>
 into a form to see if it is run by the browser and can be viewed by other users.
 
 
@@ -36,11 +38,11 @@ value or trust any information in web storage. This includes session identifiers
 
     <br>    <br>
     但是现在的应用引入很多其他代码，无法保证每个引用的第三方资源都是安全的，只要实现XSS攻击，可以读取所有访问自己网站的客户端的web storage，因此不建议将敏感信息放到web storage中
-
-
+    <br>    <br>
     As a storage mechanism, Web Storage does not enforce any secure standards during transfer.
     Whoever reads Web Storage and uses it must do their due diligence to ensure they always send the JWT over HTTPSand never HTTP.
-    <br>    <br>作为一种存储机制，Web Storage不保证在传输过程中的任何安全，因此重要的是保证通过https发送jwt。
+    <br>    <br>
+    作为一种存储机制，Web Storage不保证在传输过程中的任何安全，因此重要的是保证通过https发送jwt。
 
 
     <br><br>
@@ -91,6 +93,7 @@ value or trust any information in web storage. This includes session identifiers
     When performing XHR requests, the $http service reads a token from a cookie (by default, XSRF-TOKEN) and sets it as an HTTP header (X-XSRF-TOKEN). Since only JavaScript that runs on your domain can read the cookie, your server can be assured that the XHR came from JavaScript running on your domain.
     You can make this CSRF protection stateless by including a xsrfToken JWT claim:
     <br>    <br>
+    <div class="alert alert-primary" role="alert">
     {
     "iss": "http://galaxies.com",
     "exp": 1300819380,
@@ -98,7 +101,7 @@ value or trust any information in web storage. This includes session identifiers
     "sub": "tom@andromeda.com",
     "xsrfToken": "d9b9714c-7ac0-42e0-8696-2dae95dbc33e"
     }
-    <br>    <br>
+    <br>    <br></div>
 
 
 
